@@ -1,0 +1,10 @@
+import { patternI } from "./interface/others";
+/**
+ *
+ * @param i
+ *@todo make the imag fill work
+ */
+export function imagePattern(i: patternI) {
+  const img = new Image();
+  img.src = i.imagePath;
+}

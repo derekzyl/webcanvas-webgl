@@ -1,4 +1,4 @@
-function drawTriangleFill(t: triangleI, color: Partial<color>) {
+export function drawTriangleFill(t: triangleI, color: Partial<color>) {
   const cool_color = `rgb(${color.red ?? 0},${color.green ?? 0},${
     color.blue ?? 0
   })`;
@@ -11,7 +11,7 @@ function drawTriangleFill(t: triangleI, color: Partial<color>) {
   t.context?.lineTo(t.xy, t.yz);
   t.context?.fill();
 }
-function drawTriangleStroke(t: triangleI, color: Partial<color>) {
+export function drawTriangleStroke(t: triangleI, color: Partial<color>) {
   const cool_color = `rgb(${color.red ?? 0},${color.green ?? 0},${
     color.blue ?? 0
   })`;
@@ -25,7 +25,7 @@ function drawTriangleStroke(t: triangleI, color: Partial<color>) {
   t.context?.stroke();
 }
 
-function roundedRectStroke({
+export function roundedRectStroke({
   context,
   x,
   y,
@@ -41,7 +41,7 @@ function roundedRectStroke({
   context?.arcTo(x, y, x, y + radius, radius);
   context?.stroke();
 }
-function roundedRectFill(
+export function roundedRectFill(
   { context, x, y, width, height, radius }: roundedRectI,
   color: color
 ) {
@@ -57,20 +57,24 @@ function roundedRectFill(
   context?.arcTo(x, y, x, y + radius, radius);
   context?.fill();
 }
-function fill_rect(color: color, shape: rectShape) {
+export function fillRect(color: color, shape: rectShape) {
   const cool_color = `rgb(${color.red},${color.green},${color.blue})`;
+  shape.context!.save();
   shape.context!.fillStyle = cool_color;
-  shape.context!.fillRect(shape.x, shape.y, shape.width, shape.height);
+  shape.context!.translate(shape.x, shape.y);
+  shape.context!.fillRect(0, 0, shape.width, shape.height);
+
+  shape.context!.restore();
 }
-function clear_rect(shape: rectShape) {
+export function clearRect(shape: rectShape) {
   shape.context!.clearRect(shape.x, shape.y, shape.width, shape.height);
 }
-function stroke_rect(color: color, shape: rectShape) {
+export function strokeRect(color: color, shape: rectShape) {
   const cool_color = `rgb(${color.red},${color.green},${color.blue})`;
   shape.context!.strokeStyle = cool_color;
   shape.context!.strokeRect(shape.x, shape.y, shape.width, shape.height);
 }
-function circleStroke({
+export function circleStroke({
   context,
   x,
   y,
@@ -90,7 +94,7 @@ function circleStroke({
   );
   context?.stroke();
 }
-function circleFill(
+export function circleFill(
   { context, x, y, radius, start_angle, end_angle, clockwise }: circleShape,
   color: color
 ) {

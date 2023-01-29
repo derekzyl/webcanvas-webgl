@@ -1,4 +1,4 @@
-function gradientLinearColor(lc: linearColorI) {
+export function gradientLinearColor(lc: linearColorI) {
   const linear = lc.context!.createLinearGradient(
     lc.x_begin ?? 0,
     lc.y_begin ?? 0,
@@ -11,7 +11,7 @@ function gradientLinearColor(lc: linearColorI) {
   }
   return linear;
 }
-function gradientRadialColor(rc: radialColorI) {
+export function gradientRadialColor(rc: radialColorI) {
   const radial = rc.context!.createRadialGradient(
     rc.x_begin ?? 0,
     rc.y_begin ?? 0,
@@ -26,7 +26,7 @@ function gradientRadialColor(rc: radialColorI) {
   }
   return radial;
 }
-function gradientConeColor(cc: coneColorI) {
+export function gradientConeColor(cc: coneColorI) {
   const conic = cc.context!.createConicGradient(
     cc.start_angle ?? 0,
     cc.x_begin ?? 0,
@@ -37,4 +37,11 @@ function gradientConeColor(cc: coneColorI) {
     conic.addColorStop(Number(key), values);
   }
   return conic;
+}
+
+export function normalColor(color: color) {
+  const cool_color = `rgb(${color.red ?? 0},${color.green ?? 0},${
+    color.blue ?? 0
+  })`;
+  return cool_color;
 }
