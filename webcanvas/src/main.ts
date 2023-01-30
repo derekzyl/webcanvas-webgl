@@ -2,43 +2,120 @@ import { fillRect } from "./shapes";
 import "./style.css";
 
 function draw() {
-  const results = [
-    { name: "Satisfied", count: 1043, color: "lightblue" },
-    { name: "Neutral", count: 563, color: "lightgreen" },
-    { name: "Unsatisfied", count: 510, color: "pink" },
-    { name: "No comment", count: 175, color: "silver" },
-  ];
   const canvas = document.querySelector<HTMLCanvasElement>("#app");
 
   if (canvas?.getContext) {
-    const cx = canvas?.getContext("2d")!;
-    function eventa() {
-      let x: number;
-      let y: number;
-      let w: number;
-      let h: number;
-      canvas?.addEventListener("click", (event: any) => {
-        console.log(event.clientX, "click");
-        x = event.clientX;
-        y = event.clientY;
-        canvas?.addEventListener("mousedown", (event: any) => {
-          canvas?.addEventListener("mousemove", (event: any) => {
-            console.log(event.clientX, "mousedown");
+    const context = canvas?.getContext("2d")!;
 
-            w = event.clientX;
-            h = event.clientY;
+    context.globalAlpha = 0.5;
 
-            fillRect(
-              { blue: 255, red: 0, green: 0 },
-              { context: cx, x, y, height: h, width: w }
-            );
-            cx.closePath();
-            window.requestAnimationFrame(draw);
-          });
-        });
-      });
+    const cursor = {
+      x: innerWidth / 2,
+      y: innerHeight / 2,
+    };
+
+    let particlesArray: any = [];
+    addEventListener("mouseover", (e) => {
+      generateParticles(100);
+
+      anim();
+    });
+    addEventListener("mouseout", (e) => {
+      context.clearRect(0, 0, innerWidth, innerHeight);
+    });
+    addEventListener("mousemove", (e) => {
+      cursor.x = e.clientX;
+      cursor.y = e.clientY;
+    });
+
+    addEventListener(
+      "touchmove",
+      (e) => {
+        e.preventDefault();
+        cursor.x = e.touches[0].clientX;
+        cursor.y = e.touches[0].clientY;
+      },
+      { passive: false }
+    );
+
+    addEventListener("resize", () => setSize());
+
+    function generateColor() {
+      let hexSet = "0123456789ABCDEF";
+      let finalHexString = "#";
+      for (let i = 0; i < 6; i++) {
+        finalHexString += hexSet[Math.ceil(Math.random() * 15)];
+      }
+      return finalHexString;
     }
-    eventa();
+
+    function setSize() {
+      canvas!.height = innerHeight;
+      canvas!.width = innerWidth;
+    }
+
+    class Particle {
+      x: any;
+      y: any;
+      particleTrailWidth: any;
+      strokeColor: any;
+      theta: any;
+      rotateSpeed: any;
+      t: number;
+      constructor(
+        x: any,
+        y: any,
+        particleTrailWidth: any,
+        strokeColor: any,
+        rotateSpeed: any
+      ) {
+        this.x = x;
+        this.y = y;
+        this.particleTrailWidth = particleTrailWidth;
+        this.strokeColor = strokeColor;
+        this.theta = Math.random() * Math.PI * 2;
+        this.rotateSpeed = rotateSpeed;
+        this.t = Math.random() * 150;
+      }
+
+      rotate = () => {
+        const ls = {
+          x: this.x,
+          y: this.y,
+        };
+        this.theta += this.rotateSpeed;
+        this.x = cursor.x + Math.cos(this.theta) * this.t;
+        this.y = cursor.y + Math.sin(this.theta) * this.t;
+        context.beginPath();
+        context.lineWidth = this.particleTrailWidth;
+        context.strokeStyle = this.strokeColor;
+        context.moveTo(ls.x, ls.y);
+        context.lineTo(this.x, this.y);
+        context.stroke();
+      };
+    }
+
+    function generateParticles(amount: any) {
+      for (let i = 0; i < amount; i++) {
+        particlesArray[i] = new Particle(
+          innerWidth / 2,
+          innerHeight / 2,
+          4,
+          generateColor(),
+          0.02
+        );
+      }
+    }
+
+    function anim() {
+      requestAnimationFrame(anim);
+
+      context.fillStyle = "rgba(0,0,0,0.05)";
+      context.fillRect(0, 0, canvas!.width, canvas!.height);
+
+      particlesArray.forEach((particle: any) => particle.rotate());
+    }
+    setSize();
   } else {
     canvas!.innerHTML! = /*html*/ `
   <div>oops unsupported</div>  
