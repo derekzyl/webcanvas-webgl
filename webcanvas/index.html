@@ -6,9 +6,32 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>web canvas</title>
   </head>
-
-  <body onload="draw()">
-    <canvas id="app" width="900" height="900"> </canvas>
+  <style>
+    .can {
+      display: flex;
+      width: 100%;
+      height: 100vh;
+    }
+    .tester {
+      display: flex;
+      position: relative;
+      z-index: 200;
+      justify-content: center;
+      align-items: center;
+      align-content: center;
+      font-size: large;
+    }
+    canvas {
+      position: absolute;
+      top: 0;
+      left: 0;
+    }
+  </style>
+  <body>
+    <div class="can">
+      <canvas id="canvas"> </canvas>
+      <div class="tester">hello world</div>
+    </div>
     <script type="module" src="/src/main.ts"></script>
   </body>
 </html>
